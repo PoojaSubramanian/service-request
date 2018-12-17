@@ -1,137 +1,127 @@
-import axios from 'axios';
-import $ from 'jquery';
+import axios from "axios";
+import $ from "jquery";
 
-export const FETCH_POSTS = 'FETCH_POSTS';
-export const CREATE_POST = 'CREATE_POST';
-export const FETCH_POST = 'FETCH_POST';
-export const UPDATE_ZIP = 'UPDATE_ZIP';
-export const UPDATE_CITY = 'UPDATE_CITY';
-export const UPDATE_STATE = 'UPDATE_STATE';
-export const UPDATE_USERID = 'UPDATE_USERID';
-export const UPDATE_USERNAME = 'UPDATE_USERNAME';
-export const UPDATE_LASTNAME = 'UPDATE_LASTNAME';
-export const DELETE_POST = 'DELETE_POST';
-export const FETCH_BY_USERID = 'FETCH_BY_USERID';
-export const FETCH_COMMENTS = 'FETCH_COMMENTS';
-export const FETCH_HEALTH = 'FETCH_HEALTH';
-export const DELETE_COMMENT = 'DELETE_COMMENT';
-const config = require('../../config.js');
+export const FETCH_POSTS = "FETCH_POSTS";
+export const CREATE_POST = "CREATE_POST";
+export const FETCH_POST = "FETCH_POST";
+export const UPDATE_ZIP = "UPDATE_ZIP";
+export const UPDATE_CITY = "UPDATE_CITY";
+export const UPDATE_STATE = "UPDATE_STATE";
+export const UPDATE_USERID = "UPDATE_USERID";
+export const UPDATE_USERNAME = "UPDATE_USERNAME";
+export const UPDATE_LASTNAME = "UPDATE_LASTNAME";
+export const DELETE_POST = "DELETE_POST";
+export const FETCH_BY_USERID = "FETCH_BY_USERID";
+export const FETCH_COMMENTS = "FETCH_COMMENTS";
+export const FETCH_HEALTH = "FETCH_HEALTH";
+export const DELETE_COMMENT = "DELETE_COMMENT";
+const config = require("../../config.js");
 
-
-
-export function fetchPosts(zip){
-
-
-	const url = `${config.SERVICE_DATABASE_URL}/servicesByZip?zip=${zip}`
+export function fetchPosts(zip) {
+	const url = `${config.SERVICE_DATABASE_URL}/servicesByZip?zip=${zip}`;
 
 	const request = axios.get(url);
 
 	return {
-
 		type: FETCH_POSTS,
 		payload: request
-	}
+	};
 }
 
 //define action
-//use axios to make network request to https://reduxblog.herokuapp.com/ 
-//add ReduxPromise as middleware 
+//use axios to make network request to https://reduxblog.herokuapp.com/
+//add ReduxPromise as middleware
 
-export function createPost(values,callback){
-
+export function createPost(values, callback) {
 	// const request = axios.post(`${rooturl}/posts${API_KEY}`, values)
 	// .then(()=>{
 	// 	callback()
 	// });
-	const request = axios.post(`${config.SERVICE_DATABASE_URL}/service`, values)
-	.then(()=>{
-		callback()
-	});
+	const request = axios
+		.post(`${config.SERVICE_DATABASE_URL}/service`, values)
+		.then(() => {
+			callback();
+		});
 
-	console.log('values inside createPost',values);
+	console.log("values inside createPost", values);
 
 	return {
-		type : CREATE_POST,
-		payload : request //response data from the API
-	}
-
+		type: CREATE_POST,
+		payload: request //response data from the API
+	};
 }
 
 // fetching a single post based on messageId   --- fetch all the posts based on zipcode
-export function fetchPost(id){
+export function fetchPost(id) {
 	//const request = axios.get(`${jonurl}/posts/${id}${API_KEY}`);
-	const request = axios.get(`${config.SERVICE_DATABASE_URL}/serviceById/${id}`)
+	const request = axios.get(
+		`${config.SERVICE_DATABASE_URL}/serviceById/${id}`
+	);
 	return {
-
-		type : FETCH_POST,
-		payload : request
-	}
+		type: FETCH_POST,
+		payload: request
+	};
 }
 
-export function fetchComments(id){
-
-	const request = axios.get(`${config.SERVICE_DATABASE_URL}/commentsByServiceId/${id}`);
+export function fetchComments(id) {
+	const request = axios.get(
+		`${config.SERVICE_DATABASE_URL}/commentsByServiceId/${id}`
+	);
 
 	return {
-
-		type : FETCH_COMMENTS,
-		payload : request
-	}
+		type: FETCH_COMMENTS,
+		payload: request
+	};
 }
 
-export function getServiceByUserId(id){
+export function getServiceByUserId(id) {
+	console.log("id inside getServiceByUserId", id);
 
-		console.log("id inside getServiceByUserId",id);
-
-		const url = `${config.SERVICE_DATABASE_URL}/servicesByUserId?id=${id}`
-
-		const request = axios.get(url);
-
-		console.log("request from servicesByUserId",request);
-
-		return {
-
-			type : FETCH_BY_USERID,
-			payload : request
-		}
-}
-
-export function getServiceByFulfillerId(id){
-
-	const url = `${config.SERVICE_DATABASE_URL}/servicesByFulfillerId?id=${id}`
+	const url = `${config.SERVICE_DATABASE_URL}/servicesByUserId?id=${id}`;
 
 	const request = axios.get(url);
 
-		return {
+	console.log("request from servicesByUserId", request);
 
-			type : FETCH_BY_USERID,
-			payload : request
-		}
+	return {
+		type: FETCH_BY_USERID,
+		payload: request
+	};
 }
 
+export function getServiceByFulfillerId(id) {
+	const url = `${config.SERVICE_DATABASE_URL}/servicesByFulfillerId?id=${id}`;
 
-export function deletePost(id , callback){
+	const request = axios.get(url);
 
+	return {
+		type: FETCH_BY_USERID,
+		payload: request
+	};
+}
+
+export function deletePost(id, callback) {
 	console.log("inside deletePost ACTIONS");
-	
-	const request = axios.get(`${config.SERVICE_DATABASE_URL}/delete/${id}`).then(()=>{
-		callback()
-	});
 
-		return {
+	const request = axios
+		.get(`${config.SERVICE_DATABASE_URL}/delete/${id}`)
+		.then(() => {
+			callback();
+		});
 
-		type : DELETE_POST,
-		payload : id
-	}
-
+	return {
+		type: DELETE_POST,
+		payload: id
+	};
 }
 
-export function deleteComment(commentId,postId,cb){
+export function deleteComment(commentId, postId, cb) {
+	console.log("commentId inside deleteComment in ACTION ", commentId);
+	console.log("serviceId inside deleteComment in ACTION", postId);
 
-	console.log("commentId inside deleteComment in ACTION ",commentId);
-	console.log("serviceId inside deleteComment in ACTION",postId);
-
-	const url = `${config.SERVICE_DATABASE_URL}/comment?commentId=${commentId}&serviceId=${postId}`;
+	const url = `${
+		config.SERVICE_DATABASE_URL
+	}/comment?commentId=${commentId}&serviceId=${postId}`;
 
 	// const request = axios.delete(`${url}/${commentId}/${postId}`).then((res)=>{
 	// 			console.log('response from axios delete',res);
@@ -140,91 +130,83 @@ export function deleteComment(commentId,postId,cb){
 	// });
 
 	$.ajax({
-    url: url,
-    type: 'GET',
-    success: (data) => {
-		console.log('success in deleteComment',data);
-		cb(data);
-      },
-    error: (err) =>{
-    	console.log('error in deleteComment',JSON.stringify(err));
-    }
-});
+		url: url,
+		type: "GET",
+		success: data => {
+			console.log("success in deleteComment", data);
+			cb(data);
+		},
+		error: err => {
+			console.log("error in deleteComment", JSON.stringify(err));
+		}
+	});
 
 	return {
-		type : DELETE_COMMENT , 
-		payload : commentId
-	}
-
+		type: DELETE_COMMENT,
+		payload: commentId
+	};
 }
 
 export function updateZip(userId) {
-
-	const url = `${config.PROFILE_URL}?userId=${userId}`
+	const url = `${config.PROFILE_URL}?userId=${userId}`;
 
 	const request = axios.get(url);
 
 	return {
-		type : UPDATE_ZIP,
-		payload : request
-	}
+		type: UPDATE_ZIP,
+		payload: request
+	};
 }
 
 export function updateCity(userId) {
-
-	const url = `${config.PROFILE_URL}?userId=${userId}`
+	const url = `${config.PROFILE_URL}?userId=${userId}`;
 
 	const request = axios.get(url);
 
 	return {
-		type : UPDATE_CITY,
-		payload : request
-	}
+		type: UPDATE_CITY,
+		payload: request
+	};
 }
 
 export function updateState(userId) {
-
-	const url = `${config.PROFILE_URL}?userId=${userId}`
-
-	const request = axios.get(url);
-
-	return {
-		type : UPDATE_STATE,
-		payload : request
-	}
-}
-
-export function updateUserId(userId){
-
-	console.log("userId inside updateUserId",userId);
-
-	return {
-		type : UPDATE_USERID,
-		payload : userId
-	}
-}
-
-export function updateUserName(userId){
-
-	const url = `${config.PROFILE_URL}?userId=${userId}`
+	const url = `${config.PROFILE_URL}?userId=${userId}`;
 
 	const request = axios.get(url);
 
 	return {
-		type : UPDATE_USERNAME,
-		payload : request
-	}
+		type: UPDATE_STATE,
+		payload: request
+	};
 }
 
-export function updateLastName(userId){
+export function updateUserId(userId) {
+	console.log("userId inside updateUserId", userId);
 
-	const url = `${config.PROFILE_URL}?userId=${userId}`
+	return {
+		type: UPDATE_USERID,
+		payload: userId
+	};
+}
+
+export function updateUserName(userId) {
+	const url = `${config.PROFILE_URL}?userId=${userId}`;
 
 	const request = axios.get(url);
 
 	return {
-		type : UPDATE_LASTNAME,
-		payload : request
-	}
+		type: UPDATE_USERNAME,
+		payload: request
+	};
 }
 
+export function updateLastName(userId) {
+	const url = `${config.PROFILE_URL}?userId=${userId}`;
+
+	const request = axios.get(url);
+
+	return {
+		type: UPDATE_LASTNAME,
+		payload: request
+	};
+}
